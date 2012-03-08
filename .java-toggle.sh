@@ -1,11 +1,25 @@
-#!/bin/bash
+# Source this file to add a "java-toggle" function that switches between
+# java 6 and java 7.
+#
+# e.g.:
+#    java-toggle 6
+#
+# Switching means setting JAVA_HOME to point to the correct location, and
+# using update-alternatives to update java and javac.
+#
+# Calling java-toggle without an argument will print usage and the current
+# status of JAVA_HOME, java, and javac.
+#
+# The two JAVA_HOME options are hard-coded.
+# TODO: pick generic names (e.g. /usr/lib/jvm/java6) and require symlinks
+#       to point to the real versioned install?
 
-function usage {
+function java-toggle-usage {
     echo "usage: java-toggle <6|7>"
     echo
 }
 
-function display {
+function java-toggle-display {
     echo "JAVA_HOME=$JAVA_HOME"
     echo
     echo "java version:"
@@ -17,7 +31,7 @@ function display {
 
 function java-toggle {
     # quit fast if called with no arguments
-    [ -z $1 ] && usage && display && return 0
+    [ -z $1 ] && java-toggle-usage && java-toggle-display && return 0
 
     v=$1
 
@@ -30,12 +44,12 @@ function java-toggle {
         export JAVA_HOME=$java7
     else
         echo "$v is not a supported java version!" >&2
-        usage 
+        java-toggle-usage 
         return 1
     fi
 
     sudo update-alternatives --set java "$JAVA_HOME/bin/java"
     sudo update-alternatives --set javac "$JAVA_HOME/bin/javac"
 
-    display
+    java-toggle-display
 }
