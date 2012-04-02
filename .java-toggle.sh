@@ -10,9 +10,7 @@
 # Calling java-toggle without an argument will print usage and the current
 # status of JAVA_HOME, java, and javac.
 #
-# The two JAVA_HOME options are hard-coded.
-# TODO: pick generic names (e.g. /usr/lib/jvm/java6) and require symlinks
-#       to point to the real versioned install?
+# The two JAVA_HOME options are hard-coded as /usr/lib/jvm/java{6,7}
 
 function java-toggle-usage {
     echo "usage: java-toggle <6|7>"
@@ -35,8 +33,8 @@ function java-toggle {
 
     v=$1
 
-    java6="/usr/lib/jvm/java-6-sun"
-    java7="/usr/lib/jvm/jdk1.7.0_02"
+    java6="/usr/lib/jvm/java6"
+    java7="/usr/lib/jvm/java7"
 
     if [ $v == 6 ]; then
         export JAVA_HOME=$java6
