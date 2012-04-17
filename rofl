@@ -1,0 +1,58 @@
+#!/bin/bash
+# An animated helicopter that carries a crate with the label of your choice.
+# Usage: rofl [label]
+#
+# Helicopter image used without permission from
+# http://xcski.com/~ptomblin/planes.txt (I did edit it to point right instead
+# of left and to add the box.)
+#############################################################################
+
+# Some useful variables:
+########################
+# The rotor at rest
+A0="    _________"
+# The rotor in motion, part 1
+A1="    ----_____"
+# The rotor in motion, part 2
+A2="    _____----"
+# How many lines to move the cursor up or down to get to/from the rotor
+OFF=8
+# The duration in seconds between frames
+D=0.1
+# The label on the crate (pad or truncate as needed to fit the crate)
+N=$(printf "%9.9s" $1)
+
+# The copter!
+cat<<ROFL
+$A0
+()____.-'-,  
+ """--.____) 
+      -'--'- 
+     ____|____
+    |         |
+    |$N|
+    |_________|
+ROFL
+
+# The next section uses some control characters:
+# \x1b[nA   Move the cursor up n lines
+# \x1b[nB   Move the cursor down n lines
+# \r        Move the cursor to the beginning of the line
+
+# Move the cursor up to the line with the rotor
+echo -en "\x1b[${OFF}A"
+
+# Animate!
+for i in `seq 1 10`; do
+    echo -en "\r$A1"
+    sleep $D
+    echo -en "\r$A2"
+    sleep $D
+done
+
+# Set the rotor at rest.
+echo -en "\r$A0"
+
+# Move the cursor back to the bottom left, and add a newline
+# because I think it looks nicer.
+echo -en "\x1b[${OFF}B\r\n"
